@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报价单列表</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .nav {
+            margin-bottom: 20px;
+        }
+        .nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .nav a:hover {
+            color: #4CAF50;
+        }
+        .search-form {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .search-form form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .search-form .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        .search-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .search-form input[type="text"], .search-form input[type="date"], .search-form select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .search-form button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            align-self: flex-end;
+        }
+        .search-form button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .status-form {
+            display: inline;
+        }
+        .status-form select {
+            padding: 4px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .status-form button {
+            padding: 4px 8px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .status-form button:hover {
+            background-color: #007B9E;
+        }
+        .file-link {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .file-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="{% url 'quotation:list' %}">报价单列表</a>
+            <a href="{% url 'quotation:upload' %}">上传报价单</a>
+        </div>
+        <h1>报价单列表</h1>
+        
+        <div class="search-form">
+            <form method="get" action="{% url 'quotation:search' %}">
+                <div class="form-group">
+                    <label for="customer_name">客户名称</label>
+                    <input type="text" id="customer_name" name="customer_name" placeholder="请输入客户名称">
+                </div>
+                <div class="form-group">
+                    <label for="date">日期</label>
+                    <input type="date" id="date" name="date">
+                </div>
+                <div class="form-group">
+                    <label for="status">状态</label>
+                    <select id="status" name="status">
+                        <option value="">全部</option>
+                        <option value="completed">完成</option>
+                        <option value="inquiry">询单</option>
+                        <option value="quoted">报价</option>
+                    </select>
+                </div>
+                <button type="submit">查询</button>
+            </form>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>客户名称</th>
+                    <th>状态</th>
+                    <th>文件</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quotation in quotations %}
+                <tr>
+                    <td>{{ quotation.date }}</td>
+                    <td>{{ quotation.customer_name }}</td>
+                    <td>{{ quotation.get_status_display }}</td>
+                    <td><a href="{{ quotation.file.url }}" class="file-link" download>下载文件</a></td>
+                    <td>
+                        <form class="status-form" method="post" action="{% url 'quotation:update_status' quotation.pk %}">
+                            {% csrf_token %}
+                            <select name="status">
+                                <option value="completed" {% if quotation.status == 'completed' %}selected{% endif %}>完成</option>
+                                <option value="inquiry" {% if quotation.status == 'inquiry' %}selected{% endif %}>询单</option>
+                                <option value="quoted" {% if quotation.status == 'quoted' %}selected{% endif %}>报价</option>
+                            </select>
+                            <button type="submit">更新</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
