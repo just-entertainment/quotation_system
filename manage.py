@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+try:
+    __import__('pysqlite3')
+    import sys
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+except ImportError:
+    pass
+# --- 新增结束 ---
+
 import os
 import sys
-
 
 def main():
     """Run administrative tasks."""

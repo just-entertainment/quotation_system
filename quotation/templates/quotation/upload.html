@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>上传报价单</title>
+    <title>上传工单</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,7 +20,7 @@
         }
         h1 {
             text-align: center;
-            color: #333;
+            color: #3498db;
         }
         form {
             display: flex;
@@ -45,7 +45,7 @@
         }
         button {
             padding: 10px;
-            background-color: #4CAF50;
+            background-color: #3498db;
             color: white;
             border: none;
             border-radius: 4px;
@@ -53,7 +53,7 @@
             font-size: 16px;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
         }
         .error {
             color: red;
@@ -65,21 +65,46 @@
         .nav a {
             margin-right: 15px;
             text-decoration: none;
-            color: #333;
+            color: #3498db;
             font-weight: bold;
         }
         .nav a:hover {
-            color: #4CAF50;
+            color: #2980b9;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .form-actions button {
+            flex: 1;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .form-actions button:hover {
+            background-color: #2980b9;
+        }
+        .form-actions button[type="submit"] {
+            background-color: #27ae60;
+        }
+        .form-actions button[type="submit"]:hover {
+            background-color: #219a52;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="nav">
-            <a href="{% url 'quotation:list' %}">报价单列表</a>
-            <a href="{% url 'quotation:upload' %}">上传报价单</a>
+            <a href="{% url 'quotation:list' %}">工单列表</a>
+            <a href="{% url 'quotation:upload' %}">上传工单</a>
         </div>
-        <h1>上传报价单</h1>
+        <h1>上传工单</h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
@@ -90,6 +115,13 @@
                 {% endif %}
             </div>
             <div class="form-group">
+                {{ form.project_name.label_tag }}
+                {{ form.project_name }}
+                {% if form.project_name.errors %}
+                    <div class="error">{{ form.project_name.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
                 {{ form.status.label_tag }}
                 {{ form.status }}
                 {% if form.status.errors %}
@@ -97,16 +129,24 @@
                 {% endif %}
             </div>
             <div class="form-group">
-                {{ form.file.label_tag }}
-                <input type="file" name="file" multiple webkitdirectory directory required>
-                {% if form.file.errors %}
-                    <div class="error">{{ form.file.errors.0 }}</div>
-                {% endif %}
+                <label for="file">文件</label>
+                <input type="file" name="file" multiple required>
                 {% if error_message %}
                     <div class="error">{{ error_message }}</div>
                 {% endif %}
             </div>
-            <button type="submit">上传</button>
+            <div class="form-group">
+                <label for="attachment_type">附件类型</label>
+                <select name="attachment_type" id="attachment_type">
+                    <option value="original">原始单</option>
+                    <option value="inquiry">询价单</option>
+                    <option value="quotation">报价单</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" onclick="window.history.back()">取消</button>
+                <button type="submit">上传</button>
+            </div>
         </form>
     </div>
 </body>

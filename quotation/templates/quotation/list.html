@@ -3,116 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>报价单列表</title>
+    <title>兴中达工单</title>
     <style>
+        /* 全局样式 */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f4f4f4;
         }
+        
+        /* 容器样式 */
         .container {
-            max-width: 1000px;
+            max-width: 1400px;
             margin: 0 auto;
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+        
+        /* 标题样式 */
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 30px;
+            font-size: 32px;
         }
+        
+        /* 导航栏样式 */
         .nav {
-            margin-bottom: 20px;
-        }
-        .nav a {
-            margin-right: 15px;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-        .nav a:hover {
-            color: #4CAF50;
-        }
-        .search-form {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
             border-radius: 8px;
         }
+        
+        .nav a {
+            font-size: 18px;
+            font-weight: bold;
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        /* 按钮样式 */
+        .nav-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: white;
+        }
+        
+        .nav-button-green {
+            background-color: #27ae60;
+        }
+        
+        .nav-button-green:hover {
+            background-color: #219a52;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .nav-button-blue {
+            background-color: #3498db;
+        }
+        
+        .nav-button-blue:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* 搜索表单样式 */
+        .search-form {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
         .search-form form {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 20px;
+            align-items: flex-end;
         }
+        
         .search-form .form-group {
             flex: 1;
-            min-width: 150px;
+            min-width: 200px;
         }
-        .search-form label {
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            color: #333;
         }
-        .search-form input[type="text"], .search-form input[type="date"], .search-form select {
+        
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select {
             width: 100%;
-            padding: 8px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
-        }
-        .search-form button {
-            padding: 8px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
             cursor: pointer;
-            align-self: flex-end;
         }
-        .search-form button:hover {
-            background-color: #45a049;
+        
+        /* 确保日期输入框的整个区域都可点击 */
+        .form-group input[type="date"]::-webkit-calendar-picker-indicator {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
         }
+        
+        .form-group input[type="date"] {
+            position: relative;
+        }
+        
+        .form-group input[type="text"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        /* 表格样式 */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+        
         th {
-            background-color: #4CAF50;
+            background-color: #3498db;
             color: white;
+            font-weight: 600;
+            padding: 14px 12px;
+            text-align: center;
         }
+        
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
         tr:hover {
-            background-color: #f5f5f5;
+            background-color: #f8f9fa;
         }
+        
+        /* 状态徽章样式 */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .status-completed {
+            background-color: #27ae60;
+        }
+        
+        .status-inquiry {
+            background-color: #3498db;
+        }
+        
+        .status-quoted {
+            background-color: #f39c12;
+        }
+        
+        /* 状态表单样式 */
         .status-form {
-            display: inline;
+            display: inline-block;
+            margin-top: 10px;
         }
+        
         .status-form select {
-            padding: 4px;
+            padding: 6px 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            margin-right: 5px;
         }
+        
         .status-form button {
-            padding: 4px 8px;
-            background-color: #008CBA;
+            padding: 6px 12px;
+            background-color: #3498db;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-left: 5px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        
         .status-form button:hover {
-            background-color: #007B9E;
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
+        
+        /* 附件按钮样式 */
+        .attachment-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .attachment-buttons button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .attachment-buttons button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* 表格按钮样式 */
+        .table-button {
+            padding: 6px 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 2px;
+        }
+        
+        .table-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close:hover {
+            color: #3498db;
+        }
+        
+        /* 文件链接样式 */
         .file-link {
-            color: #4CAF50;
+            color: #3498db;
             text-decoration: none;
         }
+        
         .file-link:hover {
             text-decoration: underline;
         }
@@ -121,16 +343,23 @@
 <body>
     <div class="container">
         <div class="nav">
-            <a href="{% url 'quotation:list' %}">报价单列表</a>
-            <a href="{% url 'quotation:upload' %}">上传报价单</a>
+            <a href="{% url 'quotation:list' %}">工单列表</a>
+            <div class="nav-buttons">
+                <button onclick="openUploadModal()" class="nav-button nav-button-blue">新建工单</button>
+                <a id="exportButton" href="{% url 'quotation:export' %}">导出Excel</a>
+            </div>
         </div>
-        <h1>报价单列表</h1>
+        <h1>兴中达工单系统</h1>
         
         <div class="search-form">
             <form method="get" action="{% url 'quotation:search' %}">
                 <div class="form-group">
                     <label for="customer_name">客户名称</label>
                     <input type="text" id="customer_name" name="customer_name" placeholder="请输入客户名称">
+                </div>
+                <div class="form-group">
+                    <label for="project_name">项目名称</label>
+                    <input type="text" id="project_name" name="project_name" placeholder="请输入项目名称">
                 </div>
                 <div class="form-group">
                     <label for="date">日期</label>
@@ -145,7 +374,7 @@
                         <option value="quoted">报价</option>
                     </select>
                 </div>
-                <button type="submit">查询</button>
+                <button type="submit" class="nav-button nav-button-blue">查询</button>
             </form>
         </div>
         
@@ -154,19 +383,31 @@
                 <tr>
                     <th>日期</th>
                     <th>客户名称</th>
+                    <th>项目名称</th>
+                    <th>原单</th>
+                    <th>询价单</th>
+                    <th>报价单</th>
                     <th>状态</th>
-                    <th>文件</th>
-                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
                 {% for quotation in quotations %}
+                {% with counts=quotation.get_attachment_counts %}
                 <tr>
-                    <td>{{ quotation.date }}</td>
+                    <td>{{ quotation.date|date:"Y年m月d日" }}</td>
                     <td>{{ quotation.customer_name }}</td>
-                    <td>{{ quotation.get_status_display }}</td>
-                    <td><a href="{{ quotation.file.url }}" class="file-link" download>下载文件</a></td>
+                    <td>{{ quotation.project_name }}</td>
                     <td>
+                        <button onclick="openAttachments({{ quotation.pk }}, 'original')" class="table-button">原单</button>
+                    </td>
+                    <td>
+                        <button onclick="openAttachments({{ quotation.pk }}, 'inquiry')" class="table-button">询价单</button>
+                    </td>
+                    <td>
+                        <button onclick="openAttachments({{ quotation.pk }}, 'quotation')" class="table-button">报价单</button>
+                    </td>
+                    <td>
+                        <span class="status-badge status-{{ quotation.status }}">{{ quotation.get_status_display }}</span>
                         <form class="status-form" method="post" action="{% url 'quotation:update_status' quotation.pk %}">
                             {% csrf_token %}
                             <select name="status">
@@ -177,10 +418,258 @@
                             <button type="submit">更新</button>
                         </form>
                     </td>
+                    <td>
+                        
+                    </td>
                 </tr>
+                {% endwith %}
                 {% endfor %}
             </tbody>
         </table>
+        
+        <!-- 工单详情与附件管理模态框 -->
+        <div id="quotationModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="modalBody">
+                    <!-- 模态框内容将通过JavaScript动态加载 -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 新建工单模态框 -->
+        <div id="uploadModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 style="color: #3498db; margin-bottom: 20px;">新建工单</h2>
+                <form method="post" id="uploadForm">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="customer_name">客户名称</label>
+                        <input type="text" id="customer_name" name="customer_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="project_name">项目名称</label>
+                        <input type="text" id="project_name" name="project_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="status">状态</label>
+                        <select id="status" name="status">
+                            <option value="completed">完成</option>
+                            <option value="inquiry">询单</option>
+                            <option value="quoted">报价</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="nav-button nav-button-blue">创建</button>
+                </form>
+            </div>
+        </div>
     </div>
+    <script>
+    function copyPath(path) {
+        navigator.clipboard.writeText(path).then(() => {
+            alert('路径已复制到剪贴板，请在资源管理器中粘贴打开');
+        }).catch(err => {
+            console.error('复制失败:', err);
+            alert('复制失败，请手动复制路径');
+        });
+    }
+    
+    // 处理导出按钮点击事件，传递搜索参数
+    document.getElementById('exportButton').addEventListener('click', function(e) {
+        e.preventDefault();
+        const customerName = document.getElementById('customer_name').value;
+        const projectName = document.getElementById('project_name').value;
+        const date = document.getElementById('date').value;
+        const status = document.getElementById('status').value;
+        
+        let exportUrl = '{% url "quotation:export" %}?';
+        const params = [];
+        
+        if (customerName) {
+            params.push(`customer_name=${encodeURIComponent(customerName)}`);
+        }
+        if (projectName) {
+            params.push(`project_name=${encodeURIComponent(projectName)}`);
+        }
+        if (date) {
+            params.push(`date=${encodeURIComponent(date)}`);
+        }
+        if (status) {
+            params.push(`status=${encodeURIComponent(status)}`);
+        }
+        
+        if (params.length > 0) {
+            exportUrl += params.join('&');
+        }
+        
+        window.location.href = exportUrl;
+    });
+    
+    // 模态框相关
+    var modal = document.getElementById('quotationModal');
+    var span = document.getElementsByClassName('close')[0];
+    var modalBody = document.getElementById('modalBody');
+    
+    // 点击关闭按钮关闭模态框
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+    
+    // 点击模态框外部关闭模态框
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+        if (event.target == uploadModal) {
+            uploadModal.style.display = 'none';
+        }
+    }
+    
+    // 打开工单详情模态框
+    function openQuotationDetail(pk) {
+        // 显示加载状态
+        modalBody.innerHTML = '<p>加载中...</p>';
+        modal.style.display = 'block';
+        
+        // 发送AJAX请求获取工单详情
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/quotation/detail/' + pk + '/', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // 将返回的HTML插入到模态框中
+                modalBody.innerHTML = xhr.responseText;
+            }
+        };
+        xhr.send();
+    }
+    
+    // 打开附件管理模态框
+    function openAttachments(pk, attachment_type) {
+        // 显示加载状态
+        modalBody.innerHTML = '<p>加载中...</p>';
+        modal.style.display = 'block';
+        
+        // 发送AJAX请求获取附件管理页面
+        var xhr = new XMLHttpRequest();
+        var url = '/quotation/attachments/' + pk + '/';
+        if (attachment_type) {
+            url += attachment_type + '/';
+        }
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // 将返回的HTML插入到模态框中
+                modalBody.innerHTML = xhr.responseText;
+                
+                // 添加表单提交处理
+                setupFormSubmission();
+            }
+        };
+        xhr.send();
+    }
+    
+    // 打开上传模态框
+    var uploadModal = document.getElementById('uploadModal');
+    var uploadModalSpan = document.getElementsByClassName('close')[1];
+    
+    function openUploadModal() {
+        uploadModal.style.display = 'block';
+    }
+    
+    // 关闭上传模态框
+    uploadModalSpan.onclick = function() {
+        uploadModal.style.display = 'none';
+    }
+    
+    // 处理上传表单提交
+    var uploadForm = document.getElementById('uploadForm');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var formData = new FormData(uploadForm);
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/quotation/upload/', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        // 上传成功，关闭模态框并刷新页面
+                        uploadModal.style.display = 'none';
+                        location.reload();
+                    } else {
+                        // 上传失败，显示错误信息
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            if (response.error_message) {
+                                alert(response.error_message);
+                            }
+                        } catch (e) {
+                            alert('上传失败，请重试');
+                        }
+                    }
+                }
+            };
+            xhr.send(formData);
+        });
+    }
+    
+    // 设置表单提交处理
+    function setupFormSubmission() {
+        // 获取所有表单
+        var forms = modalBody.querySelectorAll('form');
+        
+        // 为每个表单添加提交事件处理
+        forms.forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var form = this;
+                var formData = new FormData(form);
+                
+                // 显示加载状态
+                modalBody.innerHTML = '<p>处理中...</p>';
+                
+                // 发送AJAX请求
+                var xhr = new XMLHttpRequest();
+                // 确保获取正确的action URL
+                var actionUrl = form.getAttribute('action') || form.action;
+                xhr.open('POST', actionUrl, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // 更新模态框内容
+                        modalBody.innerHTML = xhr.responseText;
+                        
+                        // 重新设置表单提交处理
+                        setupFormSubmission();
+                    }
+                };
+                xhr.send(formData);
+            });
+        });
+    }
+    
+    // 打开文件夹
+    function openFolder(path) {
+        // 发送AJAX请求到Flask服务打开文件夹
+        // alert(path);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://127.0.0.1:5000/open-folder', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    // 文件夹已打开
+                    // alert('文件夹已打开');
+                    
+                } else {
+                    // 打开失败
+                    alert('打开文件夹失败，请确保服务已启动');
+                }
+            }
+        };
+        xhr.send(JSON.stringify({path: path}));
+    }
+    </script>
 </body>
 </html>
